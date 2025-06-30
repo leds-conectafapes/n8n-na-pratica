@@ -1,249 +1,304 @@
 {
-  "name": "Exemplos",
+  "name": "My workflow 2",
   "nodes": [
+    {
+      "parameters": {
+        "mode": "insert",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "dca241a4-0f56-421d-a625-f9fa07a242b1",
+      "name": "Postgres PGVector Store",
+      "credentials": {
+        "postgres": {
+          "id": "5dKqMSCBruHjTLd6",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/text-embedding-004"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        320
+      ],
+      "id": "54b84fbe-0767-49ed-9b21-23ca58101ce7",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "u9cNPIxxaQu7O7Tj",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fileSelector": "/dados/teste.pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        120
+      ],
+      "id": "812ff873-75b6-4ea9-94c4-c0c489ef6a7c",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        140
+      ],
+      "id": "176c5add-42d5-466e-9484-9eece360e814",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        140,
+        220
+      ],
+      "id": "ee2c641c-e0a0-4045-bd36-437dc8617217",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -860,
+        320
+      ],
+      "id": "655769de-f0bb-4f33-aa9c-2fcc1e523a02",
+      "name": "When chat message received",
+      "webhookId": "d0922c25-b1df-4c75-840d-f79cc67a7056"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Respoda as perguntas do usuário somente em português.\nUse sempre a tool 'Postgres PGVectorStore' para responder as perguntad do usuário"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        320
+      ],
+      "id": "dc392b40-4e81-4c08-b2e1-3c0a938fcf8a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        480
+      ],
+      "id": "8847c6b0-27b1-404b-8f5f-ebfa86fc5161",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "u9cNPIxxaQu7O7Tj",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -540,
+        540
+      ],
+      "id": "d5e5d532-4f87-4591-98f9-e8349cb13051",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Use essa ferramenta para responder as perguntas do usuário",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        560
+      ],
+      "id": "9ed47428-2caa-4b8f-b765-fadf22eefe6d",
+      "name": "Postgres PGVector Store1",
+      "credentials": {
+        "postgres": {
+          "id": "5dKqMSCBruHjTLd6",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/text-embedding-004"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        780
+      ],
+      "id": "6ceb2f71-53a1-4e12-8751-996a20a63367",
+      "name": "Embeddings Google Gemini1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "u9cNPIxxaQu7O7Tj",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
     {
       "parameters": {},
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -600,
-        120
+        -640,
+        80
       ],
-      "id": "0d710b74-dc01-412a-92a3-3827564224fb",
+      "id": "1109e2e3-94c1-43ca-80a9-5fb76d35d999",
       "name": "When clicking ‘Execute workflow’"
-    },
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "4f1e6de7-9b92-42b6-af60-79dbcc2b14d4",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2,
-      "position": [
-        -580,
-        720
-      ],
-      "id": "26635d99-e575-47a1-9a6b-e73de7a607bd",
-      "name": "Webhook",
-      "webhookId": "4f1e6de7-9b92-42b6-af60-79dbcc2b14d4"
-    },
-    {
-      "parameters": {
-        "url": "http://api.openweathermap.org/data/2.5/forecast?id=3469034&appid=a7bd0feb24da1923f4c8e5db582f7819",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -580,
-        380
-      ],
-      "id": "b81ff743-4c99-446f-b1f7-b542faf536ee",
-      "name": "HTTP Request"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Pega a lista de previsões do primeiro item\nlet lista = $input.first().json.list;\nlet dadosProcessados = [];\n\n// Loop através de cada item da lista\nfor (const item of lista) {\n  let dados = {\n    // Temperatura (convertendo de Kelvin para Celsius)\n    temperatura: {\n      atual: item.main?.temp ? Math.round(item.main.temp - 273.15) : null,\n      maxima: item.main?.temp_max ? Math.round(item.main.temp_max - 273.15) : null,\n      minima: item.main?.temp_min ? Math.round(item.main.temp_min - 273.15) : null,\n      sensacao_termica: item.main?.feels_like ? Math.round(item.main.feels_like - 273.15) : null\n    },\n\n    // Condições climáticas\n    clima: {\n      principal: item.weather?.[0]?.main || null,\n      descricao: item.weather?.[0]?.description || null,\n      id_condicao: item.weather?.[0]?.id || null,\n      icone: item.weather?.[0]?.icon || null\n    },\n\n    // Pressão atmosférica\n    pressao: {\n      nivel_mar: item.main?.sea_level || null,\n      nivel_solo: item.main?.grnd_level || null,\n      pressao_geral: item.main?.pressure || null\n    },\n\n    // Umidade e visibilidade\n    atmosfera: {\n      umidade: item.main?.humidity || null,\n      visibilidade: item.visibility || null,\n      nuvens_cobertura: item.clouds?.all || null\n    },\n\n    // Vento\n    vento: {\n      velocidade: item.wind?.speed || null,\n      direcao_graus: item.wind?.deg || null,\n      rajada: item.wind?.gust || null\n    },\n\n    // Informações de sistema e tempo\n    sistema: {\n      periodo_dia: item.sys?.pod || null, // 'd' para dia, 'n' para noite\n      data_hora_previsao: item.dt_txt || null,\n      timestamp: item.dt || null\n    },\n\n    // Informações adicionais\n    extras: {\n      temp_kf: item.main?.temp_kf || null // Correção de temperatura interna\n    }\n  };\n\n  dadosProcessados.push(dados);\n}\n\n// Retorna array com todos os dados processados\nreturn dadosProcessados.map(item => ({ json: item }));"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -360,
-        380
-      ],
-      "id": "454780f2-ee08-444f-bf24-34b7914c2f50",
-      "name": "Code"
-    },
-    {
-      "parameters": {
-        "url": "http://api.openweathermap.org/data/2.5/forecast?id=3469034&appid=a7bd0feb24da1923f4c8e5db582f7819",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -300,
-        60
-      ],
-      "id": "d04dbe16-0433-4396-9ce6-3bfdc19b79e8",
-      "name": "HTTP Request1"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.convertToFile",
-      "typeVersion": 1.1,
-      "position": [
-        0,
-        0
-      ],
-      "id": "24525744-0bb3-4a18-84c7-4285bfa6d81d",
-      "name": "Convert to File2"
-    },
-    {
-      "parameters": {
-        "operation": "write",
-        "fileName": "/dados/temp-test.csv",
-        "options": {
-          "append": false
-        }
-      },
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        200,
-        100
-      ],
-      "id": "513d2d83-71e7-4a1b-9d0f-a38a6e32b865",
-      "name": "Read/Write Files from Disk3"
-    },
-    {
-      "parameters": {
-        "operation": "write",
-        "fileName": "/dados/forms.csv",
-        "options": {
-          "append": true
-        }
-      },
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        -100,
-        920
-      ],
-      "id": "7a4485fb-0cea-4ff6-bd2a-334b84cd231f",
-      "name": "Read/Write Files from Disk 1"
-    },
-    {
-      "parameters": {
-        "operation": "write",
-        "fileName": "/dados/temp.csv",
-        "options": {
-          "append": false
-        }
-      },
-      "type": "n8n-nodes-base.readWriteFile",
-      "typeVersion": 1,
-      "position": [
-        220,
-        460
-      ],
-      "id": "1e0a98d0-f58c-44b7-82ed-c22b99c7a619",
-      "name": "Read/Write Files from Disk 2"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.convertToFile",
-      "typeVersion": 1.1,
-      "position": [
-        -400,
-        800
-      ],
-      "id": "cb31d886-3414-43d4-89df-a9d034a58545",
-      "name": "Convert to File 1"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.convertToFile",
-      "typeVersion": 1.1,
-      "position": [
-        -100,
-        340
-      ],
-      "id": "5266364f-7351-485d-9d48-f058ea62b6d9",
-      "name": "Convert to File 2"
     }
   ],
   "pinData": {},
   "connections": {
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "When clicking ‘Execute workflow’": {
       "main": [
         [
           {
-            "node": "HTTP Request1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Webhook": {
-      "main": [
-        [
-          {
-            "node": "Convert to File 1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request": {
-      "main": [
-        [
-          {
-            "node": "Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code": {
-      "main": [
-        [
-          {
-            "node": "Convert to File 2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request1": {
-      "main": [
-        [
-          {
-            "node": "Convert to File2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Convert to File2": {
-      "main": [
-        [
-          {
-            "node": "Read/Write Files from Disk3",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Convert to File 1": {
-      "main": [
-        [
-          {
-            "node": "Read/Write Files from Disk 1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Convert to File 2": {
-      "main": [
-        [
-          {
-            "node": "Read/Write Files from Disk 2",
+            "node": "Read/Write Files from Disk",
             "type": "main",
             "index": 0
           }
@@ -255,10 +310,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "a8e96543-9e36-43a4-8ae2-7c4629306f98",
+  "versionId": "981652c1-7dbd-4e4d-be5d-f55d574a0ec8",
   "meta": {
-    "instanceId": "665adb31c1de2a12094b970be2c59c8a433216747c84aeaada6d86843264278f"
+    "templateCredsSetupCompleted": true,
+    "instanceId": "77e479669c92594a11c5f1912f4f90f9dd8a25cdd8ffa35831481682afda4ee4"
   },
-  "id": "ANuQ7X6HCWBN7Su7",
+  "id": "5GSJPjjJ9FkySelT",
   "tags": []
 }
