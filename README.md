@@ -56,7 +56,7 @@ n8n-na-pratica/
 ```bash
 # Clone o repositório
 git clone https://github.com/leds-conectafapes/n8n-na-pratica
-cd cd n8n-na-pratica/recursos/
+cd n8n-na-pratica/recursos/
 
 # Execute o n8n com Docker
 docker compose up
