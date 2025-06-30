@@ -1,0 +1,264 @@
+{
+  "name": "Exemplos",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        120
+      ],
+      "id": "0d710b74-dc01-412a-92a3-3827564224fb",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "4f1e6de7-9b92-42b6-af60-79dbcc2b14d4",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -580,
+        720
+      ],
+      "id": "26635d99-e575-47a1-9a6b-e73de7a607bd",
+      "name": "Webhook",
+      "webhookId": "4f1e6de7-9b92-42b6-af60-79dbcc2b14d4"
+    },
+    {
+      "parameters": {
+        "url": "http://api.openweathermap.org/data/2.5/forecast?id=3469034&appid=a7bd0feb24da1923f4c8e5db582f7819",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -580,
+        380
+      ],
+      "id": "b81ff743-4c99-446f-b1f7-b542faf536ee",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pega a lista de previsões do primeiro item\nlet lista = $input.first().json.list;\nlet dadosProcessados = [];\n\n// Loop através de cada item da lista\nfor (const item of lista) {\n  let dados = {\n    // Temperatura (convertendo de Kelvin para Celsius)\n    temperatura: {\n      atual: item.main?.temp ? Math.round(item.main.temp - 273.15) : null,\n      maxima: item.main?.temp_max ? Math.round(item.main.temp_max - 273.15) : null,\n      minima: item.main?.temp_min ? Math.round(item.main.temp_min - 273.15) : null,\n      sensacao_termica: item.main?.feels_like ? Math.round(item.main.feels_like - 273.15) : null\n    },\n\n    // Condições climáticas\n    clima: {\n      principal: item.weather?.[0]?.main || null,\n      descricao: item.weather?.[0]?.description || null,\n      id_condicao: item.weather?.[0]?.id || null,\n      icone: item.weather?.[0]?.icon || null\n    },\n\n    // Pressão atmosférica\n    pressao: {\n      nivel_mar: item.main?.sea_level || null,\n      nivel_solo: item.main?.grnd_level || null,\n      pressao_geral: item.main?.pressure || null\n    },\n\n    // Umidade e visibilidade\n    atmosfera: {\n      umidade: item.main?.humidity || null,\n      visibilidade: item.visibility || null,\n      nuvens_cobertura: item.clouds?.all || null\n    },\n\n    // Vento\n    vento: {\n      velocidade: item.wind?.speed || null,\n      direcao_graus: item.wind?.deg || null,\n      rajada: item.wind?.gust || null\n    },\n\n    // Informações de sistema e tempo\n    sistema: {\n      periodo_dia: item.sys?.pod || null, // 'd' para dia, 'n' para noite\n      data_hora_previsao: item.dt_txt || null,\n      timestamp: item.dt || null\n    },\n\n    // Informações adicionais\n    extras: {\n      temp_kf: item.main?.temp_kf || null // Correção de temperatura interna\n    }\n  };\n\n  dadosProcessados.push(dados);\n}\n\n// Retorna array com todos os dados processados\nreturn dadosProcessados.map(item => ({ json: item }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        380
+      ],
+      "id": "454780f2-ee08-444f-bf24-34b7914c2f50",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "url": "http://api.openweathermap.org/data/2.5/forecast?id=3469034&appid=a7bd0feb24da1923f4c8e5db582f7819",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -300,
+        60
+      ],
+      "id": "d04dbe16-0433-4396-9ce6-3bfdc19b79e8",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "24525744-0bb3-4a18-84c7-4285bfa6d81d",
+      "name": "Convert to File2"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/dados/temp-test.csv",
+        "options": {
+          "append": false
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        200,
+        100
+      ],
+      "id": "513d2d83-71e7-4a1b-9d0f-a38a6e32b865",
+      "name": "Read/Write Files from Disk3"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/dados/forms.csv",
+        "options": {
+          "append": true
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        920
+      ],
+      "id": "7a4485fb-0cea-4ff6-bd2a-334b84cd231f",
+      "name": "Read/Write Files from Disk 1"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/dados/temp.csv",
+        "options": {
+          "append": false
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        220,
+        460
+      ],
+      "id": "1e0a98d0-f58c-44b7-82ed-c22b99c7a619",
+      "name": "Read/Write Files from Disk 2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        800
+      ],
+      "id": "cb31d886-3414-43d4-89df-a9d034a58545",
+      "name": "Convert to File 1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        340
+      ],
+      "id": "5266364f-7351-485d-9d48-f058ea62b6d9",
+      "name": "Convert to File 2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Convert to File 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Convert to File 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File2": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File 1": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File 2": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a8e96543-9e36-43a4-8ae2-7c4629306f98",
+  "meta": {
+    "instanceId": "665adb31c1de2a12094b970be2c59c8a433216747c84aeaada6d86843264278f"
+  },
+  "id": "ANuQ7X6HCWBN7Su7",
+  "tags": []
+}
