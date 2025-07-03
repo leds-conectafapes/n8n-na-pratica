@@ -1,0 +1,1017 @@
+{
+  "name": "Validar-Propostas-v1",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webui_pipe_webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2080,
+        -620
+      ],
+      "id": "3fa69abb-9851-49cd-a736-763ea943a136",
+      "name": "Webhook",
+      "webhookId": "6bac7110-d447-4aef-ba63-f472ba39f9af"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        540,
+        -640
+      ],
+      "id": "30425d56-9807-4900-bdf9-9887fd650965",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "DaXkb2u6hl4MZdx1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Infelizmente sua proposta possui menos de 500 caracteres, logo ela não é válida.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -1300,
+        -180
+      ],
+      "id": "55005d4f-a7e2-47d6-8dff-6e10a48b9311",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": "propostas",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        -2200,
+        -1440
+      ],
+      "id": "1846a022-907d-4eca-b9ff-e2763949382b",
+      "name": "Postgres PGVector Store",
+      "credentials": {
+        "postgres": {
+          "id": "5dKqMSCBruHjTLd6",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -2620,
+        -1240
+      ],
+      "id": "ffc3e432-23d0-48df-8f85-7690265256da",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "DaXkb2u6hl4MZdx1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "textSplittingMode": "custom",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        -2480,
+        -1160
+      ],
+      "id": "decdde77-958e-44d6-8031-7b4051256856",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkSize": 600
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterTokenSplitter",
+      "typeVersion": 1,
+      "position": [
+        -2380,
+        -940
+      ],
+      "id": "6b69cf93-31cd-4f5f-822b-37b9dd03513a",
+      "name": "Token Splitter"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -3180,
+        -1440
+      ],
+      "id": "73233196-af74-4d2c-94db-eae030097e49",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/dados/proposta1.md",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -2940,
+        -1520
+      ],
+      "id": "2124133b-adf0-4d5b-86e4-edd597191d04",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -2660,
+        -1460
+      ],
+      "id": "de18778b-8e00-4a6d-a478-9efec71a203c",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Propostas 'originais', use a ferramenta para comparar a proposta do usuário com as já existentes no nosso banco",
+        "tableName": "propostas",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        680,
+        -520
+      ],
+      "id": "d12328d7-0b9c-4ed0-b8de-bbb40504bd1d",
+      "name": "Postgres PGVector Store1",
+      "credentials": {
+        "postgres": {
+          "id": "5dKqMSCBruHjTLd6",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        780,
+        -300
+      ],
+      "id": "4bb73b51-5ddd-4c42-952c-5809205dce95",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "DaXkb2u6hl4MZdx1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.porcentagem.toNumber() }}",
+                    "rightValue": 60,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gte"
+                    },
+                    "id": "b4b9c5b4-6e1e-4cce-9c79-75f527eadc68"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "aa472cb1-9ff0-4989-9427-0a2608de00f2",
+                    "leftValue": "={{ $json.output.porcentagem.toNumber() }}",
+                    "rightValue": 30,
+                    "operator": {
+                      "type": "number",
+                      "operation": "lt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "918adf2d-7fc2-42f7-8854-13f5cb15b98d",
+                    "leftValue": "={{ $json.output.porcentagem.toNumber() }}",
+                    "rightValue": 60,
+                    "operator": {
+                      "type": "number",
+                      "operation": "lte"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1160,
+        -860
+      ],
+      "id": "1ff2ad90-f27e-49a7-8c4e-91c40be0acc5",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"porcentagem\": \"70 (sem o %)\",\n\t\"explicação\": \"explicação do porque a porcentagem de similaridade foi dada\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        960,
+        -660
+      ],
+      "id": "444068f1-1b11-40f8-b89f-35c2ca174646",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=## Proposta inválida porque:\n{{ $('Originalidade').item.json.output['explicação'] }}\n\n## Outros pontos avaliados:\n{{ $('Coerência').item.json.output.explicacao }}\n---\n{{ $('Estrutura').item.json.output.explicacao }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1760,
+        -580
+      ],
+      "id": "c41443cc-ac1d-41c2-a2fd-e05e2f2f7861",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "69ed9028-eb85-4e21-b5ee-fe2b88820a63",
+              "leftValue": "={{ $json.body.messages.last().content }}",
+              "rightValue": "=VALIDAR:",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1800,
+        -440
+      ],
+      "id": "ce89cd1c-5c9c-4b9a-924c-c2f81e06f96e",
+      "name": "Validar?"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-nano"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1440,
+        260
+      ],
+      "id": "e99ddaac-3c9d-4e33-8cc0-6bdea284a1eb",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "DaXkb2u6hl4MZdx1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -900,
+        240
+      ],
+      "id": "b5aac990-eb08-4320-b71a-12311e25c3f3",
+      "name": "Respond to Webhook3"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1220,
+        -340
+      ],
+      "id": "25389d8d-676a-4d9f-876e-0a52bbae17d7",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "DaXkb2u6hl4MZdx1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"resultado\": false,\n  \"explicacao\": \"Explicação textual dos pontos avaliados.\"\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -940,
+        -340
+      ],
+      "id": "0173384f-9fae-4457-9f1b-0e4a0ba76c09",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "88196ea1-8c78-48cd-8cbb-3cec43f6b956",
+              "leftValue": "={{ $json.body.messages.last().content.replace('VALIDAR: ','').length }}",
+              "rightValue": 500,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1500,
+        -540
+      ],
+      "id": "abacf53b-b9a2-4944-8625-998db008ca3c",
+      "name": "MaiorQue500"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=## Proposta inválida porque: \n{{ $json.output.explicacao }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -680,
+        -340
+      ],
+      "id": "3483473a-f9b0-4783-8a76-3f8ec000030c",
+      "name": "Respond to Webhook4"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.messages.last().content }}",
+        "options": {
+          "systemMessage": "=Memória da conversa: '{{ $json.body.messages.slice(-10).map(m => m.role + ': ' + m.content).join('\\n') }}'\nVocê é o role: assistant, enquanto o usuário user, e system é para quando há envio de documentos."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -1360,
+        60
+      ],
+      "id": "3aacec76-18da-4bb4-8df9-d12221758eda",
+      "name": "Conversação"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2993ff46-3521-4db5-9441-082d7cd8ef60",
+              "leftValue": "={{ $json.output.resultado }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -940,
+        -660
+      ],
+      "id": "9a92c139-ef7f-4473-8203-a26f00aedf6a",
+      "name": "HáCoerência?"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=proposta do usuário: '{{ $json.body.messages.last().content.replace('VALIDAR: ','') }}'",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Avalie a proposta a seguir com base nos seguintes critérios:\n\nCoerência textual – O conteúdo faz sentido lógico, tem começo, meio e fim, e é compreensível?\n\nOrtografia e gramática – O texto está livre de erros gramaticais e ortográficos relevantes?\n\nLinguagem formal – O texto utiliza linguagem apropriada para uma proposta oficial, sem termos informais, inadequados ou gírias?\n\n\nSe todos os três critérios forem atendidos, retorne true.\nCaso qualquer um deles não seja atendido, retorne false.\n\nEm seguida, explique de forma breve quais critérios foram atendidos ou não, indicando claramente os pontos problemáticos."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -1260,
+        -600
+      ],
+      "id": "69a3dc10-4701-4db0-83c9-43b361a89fce",
+      "name": "Coerência"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"resultado\": false,\n  \"explicacao\": \"Explicação textual dos pontos avaliados.\"\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -480,
+        -640
+      ],
+      "id": "3759bf56-cb16-486d-a554-640dd743e5af",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -640,
+        -660
+      ],
+      "id": "a2853403-7bfc-4f9a-a332-ed9e95373b1d",
+      "name": "OpenAI Chat Model4",
+      "credentials": {
+        "openAiApi": {
+          "id": "DaXkb2u6hl4MZdx1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=## Proposta inválida porque: \n{{ $json.output.explicacao }}\n\n## Outros pontos avaliados:\n{{ $('Coerência').item.json.output.explicacao }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        -600
+      ],
+      "id": "bde0266d-c3a1-468e-9efe-cfa7efb587e2",
+      "name": "Respond to Webhook5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2993ff46-3521-4db5-9441-082d7cd8ef60",
+              "leftValue": "={{ $json.output.resultado }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -140,
+        -760
+      ],
+      "id": "720d6d23-b42a-43a0-b948-ad6dbed26e8c",
+      "name": "EstrturaCorreta?"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=proposta do usuário: '{{ $('Webhook').item.json.body.messages.last().content.replace('VALIDAR: ','') }}'",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Analise a proposta abaixo com atenção e avalie rigorosamente os seguintes critérios:\n\nObjetivo claro: A proposta apresenta um objetivo principal bem definido, específico e operacionalizável? Responda Sim ou Não, e justifique detalhadamente sua avaliação.\n\nEstrutura básica: A proposta está organizada com uma introdução clara, um desenvolvimento que aprofunda a ideia, e uma conclusão que resume os resultados ou próximos passos? Responda Sim ou Não, e justifique detalhadamente sua avaliação. Além de conter obrigatoriamente todos os seguintes: [Nome da instituição ou proponente, Objetivo da proposta, Justificativa, Metodologia, Orçamento detalhado, Cronograma de execução, Resultados esperados, Equipe envolvida]\n\nAdequação ao tema: A proposta está claramente relacionada ao tema do edital: “startups de tecnologia”? Responda Sim ou Não, e justifique detalhadamente sua avaliação.\n\nPara a proposta ser considerada válida, todos os três critérios devem ser respondidos com Sim. Caso contrário, a avaliação geral deve ser false."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -660,
+        -880
+      ],
+      "id": "7e1780fb-4954-4de9-af15-98b02fd70984",
+      "name": "Estrutura"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=## Essa proposta é válida!\n### Avaliações:\n---\n{{ $('Coerência').item.json.output.explicacao }}\n---\n{{ $('Estrutura').item.json.output.explicacao }}\n---\n{{ $('Originalidade').item.json.output['explicação'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1780,
+        -920
+      ],
+      "id": "cdc84384-70c4-407d-9aca-0220793b80f6",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=O usuário submeteu a seguinte proposta: '{{ $('Webhook').item.json.body.messages.last().content.replace('VALIDAR: ','') }}'",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Compare a proposta enviada pelo usuário com as propostas já existentes e retorne um valor percentual de similaridade entre os textos.\n\nPara isso, siga as regras abaixo:\n\nTema central: avalie se ambas tratam da mesma ideia de startup ou solução. Idêntico (40%), semelhante (25%), distinto (0%).\n\nObjetivo da proposta: compare se os objetivos são os mesmos ou compatíveis. Idênticos (30%), similares (15%), diferentes (0%).\n\nVocabulário e estilo: analise o grau de semelhança no vocabulário, tom e estilo de escrita. Muito próximo (15%), moderado (10%), diferente (0%).\n\nPalavras-chave e conceitos centrais: identifique palavras-chave e expressões usadas nas duas propostas. Muitas iguais (15%), algumas (10%), poucas ou nenhuma (0%).\n\nCalcule a soma total desses critérios (máximo 100%) para definir o nível de similaridade.\n\nRetorne o porque da similaridade, justificando a pontuação.\n\nRetorne o valor final de similaridade, em percentual.\nEx: 70 (sem o símbolo de porcentagem, sem texto adicional)"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        560,
+        -920
+      ],
+      "id": "f36f9e1d-aeea-4a26-a916-ec68c5afa2f6",
+      "name": "Originalidade"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validar?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Originalidade",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Token Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Originalidade",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Originalidade",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar?": {
+      "main": [
+        [
+          {
+            "node": "MaiorQue500",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Conversação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Conversação",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Coerência",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Coerência",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MaiorQue500": {
+      "main": [
+        [
+          {
+            "node": "Coerência",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conversação": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HáCoerência?": {
+      "main": [
+        [
+          {
+            "node": "Estrutura",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Coerência": {
+      "main": [
+        [
+          {
+            "node": "HáCoerência?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Estrutura",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Estrutura",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EstrturaCorreta?": {
+      "main": [
+        [
+          {
+            "node": "Originalidade",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Estrutura": {
+      "main": [
+        [
+          {
+            "node": "EstrturaCorreta?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Originalidade": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f97758a7-d4cf-462d-9320-651ee164f6d0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "77e479669c92594a11c5f1912f4f90f9dd8a25cdd8ffa35831481682afda4ee4"
+  },
+  "id": "hQfsQkLYsrj1wU18",
+  "tags": []
+}
