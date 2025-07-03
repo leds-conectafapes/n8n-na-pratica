@@ -55,6 +55,17 @@ services:
       - ENABLE_RETRIEVAL_QUERY_GENERATION=false
       - RAG_FULL_CONTEXT=true
 
+  pipelines:
+    image: ghcr.io/open-webui/pipelines:main
+    container_name: pipelines
+    restart: always
+    ports:
+      - "9099:9099"
+    volumes:
+      - ./pipelines:/app/pipelines
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
 volumes:
   postgres_data:
   n8n_data:

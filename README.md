@@ -86,7 +86,7 @@ n8n-na-pratica/
 ```bash
 # Clone o repositório
 git clone https://github.com/leds-conectafapes/n8n-na-pratica
-cd n8n-na-pratica/recursos
+cd n8n-na-pratica/docker
 
 # Suba o ambiente com n8n, PostgreSQL e OpenWebUI
 docker compose up -d
