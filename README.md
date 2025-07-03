@@ -150,8 +150,8 @@ O n8n é uma plataforma de automação de fluxos de trabalho baseada em nós (no
 
 ## 🎥 Aulas Gravadas
 
-Todas as aulas do curso estão disponíveis no link abaixo:
-📺 [https://link-da-playlist-ou-video.com](https://link-da-playlist-ou-video.com)
+Todas as aulas do curso estão disponíveis no links:
+📺 [Clique Aqui!](https://youtube.com/playlist?list=PLo7sFyCeiGUes7oNdHc9BI-QZDepodAVs&si=z98Cj2mqpcpvA4E6)
 
 ---
 
